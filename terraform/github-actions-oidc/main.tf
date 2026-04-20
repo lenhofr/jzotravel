@@ -45,8 +45,8 @@ data "aws_iam_policy_document" "deploy" {
   count = var.create_deploy_role ? 1 : 0
 
   statement {
-    sid     = "S3List"
-    actions = ["s3:GetBucketLocation", "s3:ListBucket", "s3:ListBucketMultipartUploads"]
+    sid       = "S3List"
+    actions   = ["s3:GetBucketLocation", "s3:ListBucket", "s3:ListBucketMultipartUploads"]
     resources = ["arn:aws:s3:::${var.site_bucket_name}"]
   }
 
@@ -60,8 +60,8 @@ data "aws_iam_policy_document" "deploy" {
   }
 
   statement {
-    sid     = "CloudFrontInvalidation"
-    actions = ["cloudfront:CreateInvalidation", "cloudfront:GetInvalidation", "cloudfront:ListInvalidations"]
+    sid       = "CloudFrontInvalidation"
+    actions   = ["cloudfront:CreateInvalidation", "cloudfront:GetInvalidation", "cloudfront:ListInvalidations"]
     resources = ["arn:aws:cloudfront::217354297026:distribution/${var.cloudfront_distribution_id}"]
   }
 }
