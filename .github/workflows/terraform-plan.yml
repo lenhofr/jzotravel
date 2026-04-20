@@ -1,0 +1,84 @@
+name: Terraform Plan
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
+    paths:
+      - 'terraform/**'
+
+permissions:
+  contents: read
+  id-token: write
+  pull-requests: write
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    env:
+      AWS_REGION: us-east-1
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_TERRAFORM_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.9.0
+
+      - name: Terraform fmt check
+        working-directory: terraform
+        run: |
+          if ! terraform fmt -check -recursive; then
+            echo '❌ Run: terraform fmt -recursive'
+            exit 1
+          fi
+
+      - name: Terraform init
+        working-directory: terraform
+        run: terraform init -input=false 2>&1 | tee init.log
+
+      - name: Terraform validate
+        working-directory: terraform
+        run: terraform validate 2>&1 | tee validate.log
+
+      - name: Terraform plan
+        id: plan
+        working-directory: terraform
+        run: |
+          set -o pipefail
+          terraform plan -input=false -no-color -out=tfplan 2>&1 | tee plan_raw.log
+          PLAN_EXIT=${PIPESTATUS[0]}
+          [ $PLAN_EXIT -eq 0 ] && terraform show -no-color tfplan > plan.txt
+          exit $PLAN_EXIT
+
+      - name: Comment plan on PR
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const read = p => fs.existsSync(p) ? fs.readFileSync(p, 'utf8') : null;
+            const planTxt = read('terraform/plan.txt');
+            const planRaw = read('terraform/plan_raw.log');
+            let body;
+            if (planTxt) {
+              const noChanges = /No changes/.test(planTxt);
+              const truncated = planTxt.length > 60000 ? planTxt.slice(0, 60000) + '\n...(truncated)' : planTxt;
+              body = `<!-- terraform-plan -->\n${noChanges ? '✅ No changes' : '📋 Terraform Plan'}\n\`\`\`\n${truncated}\n\`\`\``;
+            } else {
+              body = `<!-- terraform-plan -->\n❌ Plan failed\n\`\`\`\n${(planRaw || 'no output').slice(0, 60000)}\n\`\`\``;
+            }
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+            const comments = await github.paginate(github.rest.issues.listComments, { owner, repo, issue_number, per_page: 100 });
+            const existing = comments.find(c => (c.body || '').includes('<!-- terraform-plan -->'));
+            if (existing) {
+              await github.rest.issues.updateComment({ owner, repo, comment_id: existing.id, body });
+            } else {
+              await github.rest.issues.createComment({ owner, repo, issue_number, body });
+            }

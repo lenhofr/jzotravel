@@ -1,0 +1,19 @@
+node_modules/
+dist/
+
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfplan
+.terraform.lock.hcl
+tfapply.log
+plan_raw.log
+plan.txt
+plan.json
+init.log
+validate.log
+
+# Local env
+.env
+.env.local
