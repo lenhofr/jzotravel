@@ -67,6 +67,12 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Configure AWS credentials (deploy role)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
       - name: Sync to S3
         run: aws s3 sync dist/ s3://${{ steps.tfout.outputs.site_bucket }}/ --delete
 
