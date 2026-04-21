@@ -1,8 +1,8 @@
 export default function Contact() {
   return (
-    <section id="contact" className="py-24 bg-slate-900">
+    <section id="contact" className="py-24 bg-jzo-navy">
       <div className="max-w-2xl mx-auto px-6 text-center">
-        <p className="text-amber-400 text-xs font-medium tracking-[0.3em] uppercase mb-4">Get in Touch</p>
+        <p className="text-jzo-gold text-xs font-medium tracking-[0.3em] uppercase mb-4">Get in Touch</p>
         <h2 className="font-serif text-4xl md:text-5xl text-white leading-tight mb-6">
           Ready to Start<br />Your Next Chapter?
         </h2>
@@ -12,7 +12,7 @@ export default function Contact() {
         </p>
         <a
           href="mailto:hello@jzotravel.world"
-          className="inline-block bg-amber-500 hover:bg-amber-600 text-white font-semibold px-10 py-4 transition-colors text-sm tracking-widest uppercase"
+          className="inline-block bg-jzo-gold hover:bg-jzo-gold-dark text-white font-semibold px-10 py-4 transition-colors text-sm tracking-widest uppercase"
         >
           hello@jzotravel.world
         </a>

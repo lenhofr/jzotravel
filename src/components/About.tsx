@@ -3,7 +3,7 @@ export default function About() {
     <section id="about" className="py-24 bg-white">
       <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
         <div>
-          <p className="text-amber-500 text-xs font-medium tracking-[0.3em] uppercase mb-4">Our Story</p>
+          <p className="text-jzo-gold text-xs font-medium tracking-[0.3em] uppercase mb-4">Our Story</p>
           <h2 className="font-serif text-4xl md:text-5xl text-slate-900 leading-tight mb-6">
             Travel Is Personal.<br />We Treat It That Way.
           </h2>
@@ -30,7 +30,7 @@ export default function About() {
             alt="Traveler exploring the world"
             className="w-full h-[480px] object-cover shadow-xl"
           />
-          <div className="absolute -bottom-5 -left-5 w-48 h-32 bg-amber-500 -z-10" />
+          <div className="absolute -bottom-5 -left-5 w-48 h-32 bg-jzo-gold -z-10" />
         </div>
       </div>
     </section>

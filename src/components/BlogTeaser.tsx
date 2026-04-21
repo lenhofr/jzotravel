@@ -25,7 +25,7 @@ export default function BlogTeaser() {
       <div className="max-w-6xl mx-auto px-6">
         <div className="flex items-end justify-between mb-12">
           <div>
-            <p className="text-amber-500 text-xs font-medium tracking-[0.3em] uppercase mb-4">The Journal</p>
+            <p className="text-jzo-gold text-xs font-medium tracking-[0.3em] uppercase mb-4">The Journal</p>
             <h2 className="font-serif text-4xl md:text-5xl text-slate-900">Stories from the Road</h2>
           </div>
           <p className="hidden md:block text-slate-300 text-sm">More coming soon</p>
@@ -41,8 +41,8 @@ export default function BlogTeaser() {
                   className="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-500"
                 />
               </div>
-              <p className="text-amber-500 text-xs font-medium tracking-widest uppercase mb-2">{post.tag}</p>
-              <h3 className="font-serif text-xl text-slate-900 mb-2 group-hover:text-amber-600 transition-colors leading-snug">
+              <p className="text-jzo-gold text-xs font-medium tracking-widest uppercase mb-2">{post.tag}</p>
+              <h3 className="font-serif text-xl text-slate-900 mb-2 group-hover:text-jzo-gold-dark transition-colors leading-snug">
                 {post.title}
               </h3>
               <p className="text-slate-500 text-sm leading-relaxed mb-4">{post.excerpt}</p>
