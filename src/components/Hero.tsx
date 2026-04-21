@@ -9,7 +9,7 @@ export default function Hero() {
       <div className="absolute inset-0 bg-slate-900/55" />
 
       <div className="relative z-10 max-w-3xl mx-auto px-6">
-        <p className="text-amber-400 text-xs font-medium tracking-[0.3em] uppercase mb-5">
+        <p className="text-jzo-gold text-xs font-medium tracking-[0.3em] uppercase mb-5">
           Boutique Travel Planning
         </p>
         <h1 className="font-serif text-5xl md:text-7xl font-bold text-white leading-tight mb-6">
@@ -20,7 +20,7 @@ export default function Hero() {
         </p>
         <a
           href="#contact"
-          className="inline-block bg-amber-500 hover:bg-amber-600 text-white font-semibold px-8 py-4 rounded transition-colors text-sm tracking-widest uppercase"
+          className="inline-block bg-jzo-gold hover:bg-jzo-gold-dark text-white font-semibold px-8 py-4 rounded transition-colors text-sm tracking-widest uppercase"
         >
           Start Your Journey
         </a>
