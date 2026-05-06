@@ -19,7 +19,9 @@ export default function Hero() {
           White-glove travel experiences crafted around your story. Every detail, handled with care.
         </p>
         <a
-          href="#contact"
+          href="https://secure.foratravel.com/intake/dzqwAD2mHi"
+          target="_blank"
+          rel="noopener noreferrer"
           className="inline-block bg-jzo-gold hover:bg-jzo-gold-dark text-white font-semibold px-8 py-4 rounded transition-colors text-sm tracking-widest uppercase"
         >
           Start Your Journey
