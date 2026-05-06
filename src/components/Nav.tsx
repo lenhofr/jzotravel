@@ -30,7 +30,9 @@ export default function Nav() {
             </a>
           ))}
           <a
-            href="#contact"
+            href="https://secure.foratravel.com/intake/dzqwAD2mHi"
+            target="_blank"
+            rel="noopener noreferrer"
             className={`text-sm font-medium px-4 py-2 border rounded transition-colors ${scrolled ? 'border-jzo-navy text-jzo-navy hover:bg-jzo-navy hover:text-white' : 'border-white text-white hover:bg-white hover:text-jzo-navy'}`}
           >
             Plan a Trip

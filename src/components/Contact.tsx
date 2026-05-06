@@ -11,12 +11,19 @@ export default function Contact() {
           we'll handle everything else.
         </p>
         <a
-          href="mailto:hello@jzotravel.world"
+          href="https://secure.foratravel.com/intake/dzqwAD2mHi"
+          target="_blank"
+          rel="noopener noreferrer"
           className="inline-block bg-jzo-gold hover:bg-jzo-gold-dark text-white font-semibold px-10 py-4 transition-colors text-sm tracking-widest uppercase"
         >
-          hello@jzotravel.world
+          Start Planning Your Trip
         </a>
-        <p className="text-slate-600 text-sm mt-6">We respond within 24 hours.</p>
+        <p className="text-slate-600 text-sm mt-6">
+          Or email us at{' '}
+          <a href="mailto:hello@jzotravel.world" className="text-jzo-gold hover:text-jzo-gold-dark transition-colors">
+            hello@jzotravel.world
+          </a>
+        </p>
       </div>
     </section>
   )
