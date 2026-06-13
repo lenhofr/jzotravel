@@ -17,3 +17,7 @@ validate.log
 # Local env
 .env
 .env.local
+
+# Local dev artifacts
+tmp_artifacts/
+.vite/
