@@ -21,3 +21,6 @@ validate.log
 # Local dev artifacts
 tmp_artifacts/
 .vite/
+
+# Mac Finder
+.DS_Store
