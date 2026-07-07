@@ -2,8 +2,8 @@ export default function Hero() {
   return (
     <section id="home" className="relative h-screen flex items-center justify-center text-center overflow-hidden">
       <img
-        src="https://picsum.photos/seed/jzo-hero/1920/1080"
-        alt="Scenic travel destination"
+        src="/images/waikiki-hero.webp"
+        alt="Rainbow over Waikiki Beach and Diamond Head, Honolulu"
         className="absolute inset-0 w-full h-full object-cover"
       />
       <div className="absolute inset-0 bg-slate-900/55" />
