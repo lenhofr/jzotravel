@@ -26,8 +26,8 @@ export default function About() {
 
         <div className="relative">
           <img
-            src="https://picsum.photos/seed/jzo-about/800/600"
-            alt="Traveler exploring the world"
+            src="/images/andes-llama.webp"
+            alt="A llama in sunglasses beside a guide in a traditional poncho in the Andes"
             className="w-full h-[480px] object-cover shadow-xl"
           />
           <div className="absolute -bottom-5 -left-5 w-48 h-32 bg-jzo-gold -z-10" />
