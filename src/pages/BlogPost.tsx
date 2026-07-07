@@ -54,7 +54,7 @@ export default function BlogPost() {
         {/* CTA */}
         <div className="mt-16 pt-12 border-t border-stone-100 text-center">
           <p className="font-serif text-2xl text-slate-900 mb-3">Ready to see it for yourself?</p>
-          <p className="text-slate-500 mb-8">Let us plan your Seville itinerary — every detail handled.</p>
+          <p className="text-slate-500 mb-8">{post.cta ?? 'Let us plan your next itinerary — every detail handled.'}</p>
           <a
             href="https://secure.foratravel.com/intake/dzqwAD2mHi"
             target="_blank"
