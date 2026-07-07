@@ -76,15 +76,6 @@ export const posts: Post[] = [
       "Seville rewards the traveler who slows down. The Alcázar alone deserves half a day, and the baths are reason enough to linger in the lower levels long after the tour groups have moved on.",
     ],
   },
-  {
-    slug: 'patagonia-one-week',
-    tag: 'South America',
-    title: "Patagonia in a Week: What's Worth It and What's Not",
-    excerpt: "An honest guide to planning the end of the world without blowing your budget.",
-    image: 'https://picsum.photos/seed/jzo-blog3/600/400',
-    date: 'Coming Soon',
-    body: [],
-  },
 ]
 
 export function getPost(slug: string): Post | undefined {
