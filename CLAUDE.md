@@ -45,11 +45,15 @@ Source photos arrive as iPhone HEIC or JPEG. Targets: hero/full-bleed images 192
 # 1. HEIC first needs converting — cwebp cannot read HEIC; use macOS sips:
 sips -s format jpeg -s formatOptions 95 photo.HEIC --out /tmp/photo.jpg
 
-# 2. (Optional) crop, e.g. to remove an artifact along an edge — Pillow:
+# 2. Bake in EXIF rotation — iPhone portrait photos store pixels landscape
+#    with an orientation flag, and cwebp IGNORES it (the webp comes out
+#    sideways). Always run exif_transpose; optionally crop in the same step:
 python3 -c "
-from PIL import Image
-img = Image.open('/tmp/photo.jpg')
-img.crop((0, 90, img.width, img.height)).save('/tmp/photo.jpg', quality=95)"
+from PIL import Image, ImageOps
+img = ImageOps.exif_transpose(Image.open('/tmp/photo.jpg'))
+# optional crop, e.g. to remove an artifact along an edge:
+# img = img.crop((0, 90, img.width, img.height))
+img.save('/tmp/photo.jpg', quality=95)"
 
 # 3. Resize + encode to webp (cwebp is installed via homebrew):
 cwebp -q 82 -resize 1920 0 /tmp/photo.jpg -o public/images/<name>.webp
