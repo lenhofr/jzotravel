@@ -20,8 +20,8 @@ export default function Contact() {
         </a>
         <p className="text-slate-600 text-sm mt-6">
           Or email us at{' '}
-          <a href="mailto:hello@jzotravel.world" className="text-jzo-gold hover:text-jzo-gold-dark transition-colors">
-            hello@jzotravel.world
+          <a href="mailto:Matthew.cuntz@fora.travel" className="text-jzo-gold hover:text-jzo-gold-dark transition-colors">
+            Matthew.cuntz@fora.travel
           </a>
         </p>
       </div>
