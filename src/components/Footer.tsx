@@ -2,7 +2,7 @@ export default function Footer() {
   return (
     <footer className="bg-jzo-navy-dark py-10">
       <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
-        <img src="/logo-white.png" alt="JZO Travel" className="h-7" />
+        <img src="/logo-white.svg" alt="JZO Travel" width="70" height="28" className="h-7 w-auto" />
         <p className="text-slate-500 text-sm">© {new Date().getFullYear()} JZO Travel. All rights reserved.</p>
         <p className="text-slate-600 text-xs">jzotravel.world</p>
       </div>

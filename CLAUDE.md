@@ -62,3 +62,24 @@ cwebp -q 82 -resize 1920 0 /tmp/photo.jpg -o public/images/<name>.webp
 For a JPEG source, skip step 1 and run `cwebp` directly. `-resize <width> 0` preserves aspect ratio. Sanity-check the result visually and keep hero files ≲300KB. Source photos smaller than ~800px wide will look soft in the full-bleed hero — ask for the full-resolution original.
 
 Don't commit source HEIC/JPEG files; only the final `.webp` belongs in `public/images/`. Some untracked leftovers (e.g. `IMG_5810.webp`, source HEICs) may sit in `public/images/` — leave them alone and don't add them to commits.
+
+## Logo assets
+
+The wordmark is **SVG**, traced from a high-res master with `potrace` — it's flat-color line art, so it vectorizes cleanly and stays crisp at every DPI. Don't replace the SVGs with PNGs; a raster wordmark looks soft in the nav.
+
+- `public/logo.svg` — gold `#AD772D`, used by `Nav.tsx` on white/hero
+- `public/logo-white.svg` — same paths filled white, used by `Footer.tsx` on navy
+- `public/favicon.svg` + `favicon-32/180.png`, `icon-192/512.png` — the **airplane glyph only**, on a navy plate. The full wordmark is unreadable in a 32px square, so never squeeze it into the icons.
+- `public/og-image.png` — 1200×630, wordmark centered on navy
+
+To regenerate from a new master: crop to the alpha bounding box first (Canva exports carry huge transparent padding and EXIF/XMP with the designer's name and Canva/Facebook IDs — both should be stripped), then `potrace` the alpha silhouette at ~4000px wide. Strip the XML prolog and DTD from potrace's output and keep `viewBox` only, so CSS controls the size.
+
+### Gold tokens
+
+Three golds in `tailwind.config.js`, and they are not interchangeable:
+
+- `jzo-gold` `#AD772D` — the logo color; gold on white and gold button fills
+- `jzo-gold-dark` `#8F6224` — hover states
+- `jzo-gold-light` `#C98C36` — **gold text on navy only** (the Contact section)
+
+No single gold clears WCAG AA on both white and navy: gold-on-navy needs relative luminance ≥0.238, white-on-gold needs ≤0.183. Hence the split. If you change one, recheck the others rather than propagating a single value.
