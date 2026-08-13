@@ -2,7 +2,7 @@ export default function Contact() {
   return (
     <section id="contact" className="py-24 bg-jzo-navy relative">
       <div className="max-w-2xl mx-auto px-6 text-center">
-        <p className="text-jzo-gold text-xs font-medium tracking-[0.3em] uppercase mb-4">Get in Touch</p>
+        <p className="text-jzo-gold-light text-xs font-medium tracking-[0.3em] uppercase mb-4">Get in Touch</p>
         <h2 className="font-serif text-4xl md:text-5xl text-white leading-tight mb-6">
           Ready to Start<br />Your Next Chapter?
         </h2>
@@ -20,7 +20,7 @@ export default function Contact() {
         </a>
         <p className="text-slate-600 text-sm mt-6">
           Or email us at{' '}
-          <a href="mailto:hello@jzotravel.world" className="text-jzo-gold hover:text-jzo-gold-dark transition-colors">
+          <a href="mailto:hello@jzotravel.world" className="text-jzo-gold-light hover:text-jzo-gold transition-colors">
             hello@jzotravel.world
           </a>
         </p>

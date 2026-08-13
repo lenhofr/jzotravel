@@ -16,7 +16,7 @@ export default function Nav() {
     <nav className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white shadow-sm' : 'bg-transparent'}`}>
       <div className="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
         <a href="#">
-          <img src="/logo.png" alt="JZO Travel" className="h-8" />
+          <img src="/logo.svg" alt="JZO Travel" width="80" height="32" className="h-8 w-auto" />
         </a>
 
         <div className="hidden md:flex items-center gap-8">
