@@ -4,7 +4,7 @@ slug: "alcazar-baths-seville"
 date: 2026-06-01
 tag: "Spain"
 excerpt: "Hidden under Seville's Royal Alcázar, a 14th-century water vault that has awed visitors for centuries — and yes, you may recognize it from Game of Thrones."
-image: "/images/IMG_6970.webp"
+image: "/images/blog/alcazar-baths.webp"
 imageAlt: "Ribbed Gothic arches of the Baños de Doña María de Padilla reflected in still, dark water"
 cta: "Let us plan your Seville itinerary — every detail handled."
 draft: false

@@ -4,7 +4,7 @@ slug: "humongous-fungus-fest-michigan"
 date: 2026-07-01
 tag: "Michigan"
 excerpt: "Beneath 37 acres of Michigan's Upper Peninsula lives a 400-ton, 2,000-year-old fungus — and every summer, Crystal Falls throws it a party."
-image: "/images/pictured-rocks.webp"
+image: "/images/blog/pictured-rocks.webp"
 imageAlt: "Sandstone cliffs of Pictured Rocks National Lakeshore rising above the blue water of Lake Superior"
 cta: "Interested in a Michigan Upper Peninsula trip anchored by the Fungus Fest? Let us plan a full UP itinerary — the festival, Pictured Rocks, waterfalls, and a lakeside cabin stay."
 draft: false

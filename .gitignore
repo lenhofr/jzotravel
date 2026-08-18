@@ -28,5 +28,11 @@ validate.log
 tmp_artifacts/
 .vite/
 
+# Source photos. Everything in public/ is copied verbatim into dist/ and synced
+# to S3, so a stray HEIC would ship to production. Convert to .webp and commit
+# only that — see the image workflow in CLAUDE.md.
+*.HEIC
+*.heic
+
 # Mac Finder
 .DS_Store
