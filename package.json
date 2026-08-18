@@ -8,6 +8,7 @@
     "dev": "vite",
     "prebuild": "npm run generate:posts",
     "build": "vite build",
+    "typecheck": "tsc --noEmit",
     "preview": "vite preview",
     "tf:fmt": "terraform fmt -recursive",
     "tf:fmt:check": "terraform fmt -recursive -check"
@@ -16,13 +17,12 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-markdown": "^10.1.0",
-    "react-router-dom": "^7.17.0"
+    "react-router-dom": "^7.18.2"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.20",
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
-    "@types/react-router-dom": "^5.3.3",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.20",
     "gray-matter": "^4.0.3",
