@@ -46,6 +46,15 @@ collections:
       pull request is merged.
     folder: "content/blog"
     create: true
+    # Deleting an ALREADY-PUBLISHED entry is the one Decap operation that does
+    # not go through editorial_workflow — it commits the deletion straight to
+    # `branch: main` via the GitHub Contents API, no cms/<slug> branch, no PR,
+    # regardless of this file's publish_mode setting. (Deleting a draft that is
+    # still sitting in its own open PR is unaffected — that one respects the
+    # workflow, since it just abandons the branch.) `delete: false` removes the
+    # Delete button entirely, so removing a live post goes through `draft: true`
+    # instead — a normal edit, which does open a PR.
+    delete: false
     # Name the file from the slug field rather than from the title, so the
     # filename and the URL cannot drift apart. generate-posts.mjs warns when
     # they do.
@@ -134,8 +143,9 @@ collections:
         # message anywhere.
         default: false
         hint: >-
-          Leave off. Turn on only to pull an already-published post from the
-          site while keeping the file.
+          Leave off. Turn on to pull an already-published post from the site —
+          this is the only way to remove one, since the CMS has no Delete
+          button for a published post.
 
       - label: "Body"
         name: "body"
