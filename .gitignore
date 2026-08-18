@@ -1,6 +1,12 @@
 node_modules/
 dist/
 
+# Compiled from content/blog/*.md by scripts/generate-posts.mjs on every
+# build and dev start. Committing it would make every content edit produce a
+# second, conflict-prone diff. After a fresh clone, run `npm run generate:posts`
+# once so the import in src/data/posts.ts resolves in your editor.
+src/data/posts.generated.json
+
 # Terraform
 **/.terraform/
 *.tfstate

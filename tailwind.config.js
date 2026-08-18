@@ -1,6 +1,11 @@
 /** @type {import('tailwindcss').Config} */
+const typography = require('@tailwindcss/typography')
+
 module.exports = {
-  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  // public/admin/index.html is scanned too: the CMS preview pane reuses the
+  // site's compiled stylesheet, so any class used only there would otherwise
+  // never be generated and the preview would render unstyled.
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}', './public/admin/index.html'],
   theme: {
     extend: {
       fontFamily: {
@@ -20,5 +25,5 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [typography],
 }

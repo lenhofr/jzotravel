@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- The admin UI is not site content and should never be indexed. -->
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Content admin — JZO Travel</title>
+  </head>
+  <body>
+    <!--
+      CMS_MANUAL_INIT must be set BEFORE the Decap bundle loads. Decap reads it
+      as it initialises, so setting it in a later script tag does nothing at all
+      — the editor has already auto-mounted by then, and registerPreviewStyle
+      calls arrive too late to reach the first preview.
+    -->
+    <script>
+      window.CMS_MANUAL_INIT = true;
+    </script>
+
+    <!--
+      Pinned to an exact version rather than a range. This bundle can commit to
+      the content repository, so an unattended upgrade is not something we want
+      arriving via CDN on someone else's release schedule.
+
+      integrity pins the bytes, not just the version. This page holds a GitHub
+      token in localStorage, so a tampered CDN response would be running with
+      access to it; with SRI the browser refuses to execute anything that does
+      not hash to exactly this. Requires crossorigin, and unpkg serves
+      access-control-allow-origin: *.
+
+      Regenerate when bumping the version, or /admin/ goes blank:
+        curl -sL https://unpkg.com/decap-cms@<v>/dist/decap-cms.js \
+          | openssl dgst -sha384 -binary | openssl base64 -A
+
+      The preview template below uses window.h, which this script defines. It is
+      part of Decap's documented extension API.
+    -->
+    <script
+      src="https://unpkg.com/decap-cms@3.15.1/dist/decap-cms.js"
+      integrity="sha384-in6eHztHveqQ7uMZ1fDaKlDmacQLFuLH2wWrFTiymyuS8zQ5bixwL8U3AeRi8h/L"
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      (function () {
+        var h = window.h;
+
+        var MONTHS = [
+          "January", "February", "March", "April", "May", "June",
+          "July", "August", "September", "October", "November", "December",
+        ];
+
+        /**
+         * Mirrors formatPostDate() in src/data/posts.ts. Parsed by regex rather
+         * than with `new Date()` — in a timezone behind UTC, `new Date("2026-07-01")`
+         * lands on June 30 and the preview would show the wrong month.
+         *
+         * This is a deliberate duplicate: the admin page is plain static HTML
+         * and cannot import from the app bundle. If posts.ts changes, change it
+         * here too.
+         */
+        function formatPostDate(value) {
+          if (!value) return "";
+          var match = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(value));
+          if (!match) return String(value);
+          return MONTHS[Number(match[2]) - 1] + " " + match[1];
+        }
+
+        // Same class list as the PROSE constant in src/pages/BlogPost.tsx.
+        var PROSE =
+          "prose max-w-none " +
+          "prose-headings:font-serif prose-headings:text-slate-900 prose-headings:font-normal " +
+          "prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-4 " +
+          "prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3 " +
+          "prose-p:text-slate-700 prose-p:text-lg prose-p:leading-relaxed " +
+          "prose-li:text-slate-700 prose-li:text-lg prose-li:leading-relaxed " +
+          "prose-strong:text-slate-900 prose-strong:font-semibold " +
+          "prose-a:text-jzo-gold prose-a:no-underline hover:prose-a:text-jzo-gold-dark " +
+          "prose-blockquote:border-l-2 prose-blockquote:border-jzo-gold " +
+          "prose-blockquote:font-serif prose-blockquote:not-italic prose-blockquote:text-slate-600 " +
+          "prose-img:w-full";
+
+        /**
+         * Renders an entry the way /blog/<slug> renders it, so an author sees
+         * the real design rather than Decap's generic default preview. Markup
+         * tracks src/pages/BlogPost.tsx; the closing Start Planning block is
+         * omitted below the pitch line because the button never varies.
+         */
+        function BlogPostPreview(props) {
+          var data = props.entry.get("data");
+          var get = function (key) {
+            var value = data.get(key);
+            return value == null ? "" : value;
+          };
+
+          var image = get("image");
+          // Newly uploaded images are not committed yet, so resolve through
+          // getAsset — it hands back a local blob URL until the entry is saved.
+          var imageSrc = image ? props.getAsset(image).toString() : "";
+
+          return h(
+            "article",
+            { className: "bg-white" },
+            h(
+              "div",
+              { className: "relative h-[60vh] overflow-hidden" },
+              imageSrc
+                ? h("img", {
+                    src: imageSrc,
+                    alt: get("imageAlt"),
+                    className: "w-full h-full object-cover",
+                  })
+                : h("div", { className: "w-full h-full bg-slate-300" }),
+              h("div", { className: "absolute inset-0 bg-slate-900/40" }),
+              h(
+                "div",
+                { className: "absolute inset-0 flex items-end" },
+                h(
+                  "div",
+                  { className: "max-w-4xl mx-auto px-6 pb-12 w-full" },
+                  h(
+                    "p",
+                    {
+                      className:
+                        "text-jzo-gold text-xs font-medium tracking-[0.3em] uppercase mb-3",
+                    },
+                    get("tag") || "Region",
+                  ),
+                  h(
+                    "h1",
+                    {
+                      className:
+                        "font-serif text-4xl md:text-5xl text-white leading-tight max-w-2xl",
+                    },
+                    get("title") || "Untitled post",
+                  ),
+                  h(
+                    "p",
+                    { className: "text-white/60 text-sm mt-3" },
+                    formatPostDate(get("date")),
+                  ),
+                ),
+              ),
+            ),
+            h(
+              "div",
+              { className: "max-w-2xl mx-auto px-6 py-16" },
+              h("div", { className: PROSE }, props.widgetFor("body")),
+              h(
+                "div",
+                { className: "mt-16 pt-12 border-t border-stone-100 text-center" },
+                h(
+                  "p",
+                  { className: "font-serif text-2xl text-slate-900 mb-3" },
+                  "Ready to see it for yourself?",
+                ),
+                h(
+                  "p",
+                  { className: "text-slate-500" },
+                  get("cta") ||
+                    "Let us plan your next itinerary — every detail handled.",
+                ),
+              ),
+            ),
+          );
+        }
+
+        /**
+         * The site's stylesheet is content-hashed by Vite, so its filename
+         * cannot be hard-coded here — it changes on every build that touches
+         * CSS. Read the live page and pull whatever it is currently linking.
+         */
+        function siteStylesheets() {
+          return fetch("/", { cache: "no-cache" })
+            .then(function (res) {
+              return res.text();
+            })
+            .then(function (html) {
+              var hrefs = [];
+              var re = /<link[^>]+href="([^"]+\.css)"[^>]*>/gi;
+              var match;
+              while ((match = re.exec(html)) !== null) hrefs.push(match[1]);
+              return hrefs;
+            });
+        }
+
+        siteStylesheets()
+          .then(function (hrefs) {
+            if (!hrefs.length) throw new Error("no stylesheet found on /");
+            hrefs.forEach(function (href) {
+              window.CMS.registerPreviewStyle(href);
+            });
+          })
+          .catch(function (err) {
+            // An unstyled preview is worse than a styled one but far better
+            // than an admin UI that will not load, so never block init on this.
+            console.warn("Falling back to an unstyled preview:", err);
+          })
+          .then(function () {
+            window.CMS.registerPreviewTemplate("blog", BlogPostPreview);
+            window.CMS.init();
+          });
+      })();
+    </script>
+  </body>
+</html>
