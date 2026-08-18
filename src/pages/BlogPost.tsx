@@ -1,5 +1,26 @@
 import { useParams, Link } from 'react-router-dom'
-import { getPost } from '../data/posts'
+import ReactMarkdown from 'react-markdown'
+import { getPost, formatPostDate } from '../data/posts'
+
+/**
+ * Typography for the markdown body. The @tailwindcss/typography defaults are
+ * overridden to match what the hand-rolled <p> stack used to render, so posts
+ * migrated from the old string[] bodies look unchanged — while lists, headings
+ * and links, which previously had no way to exist, now render properly.
+ */
+const PROSE = [
+  'prose max-w-none',
+  'prose-headings:font-serif prose-headings:text-slate-900 prose-headings:font-normal',
+  'prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-4',
+  'prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3',
+  'prose-p:text-slate-700 prose-p:text-lg prose-p:leading-relaxed',
+  'prose-li:text-slate-700 prose-li:text-lg prose-li:leading-relaxed',
+  'prose-strong:text-slate-900 prose-strong:font-semibold',
+  'prose-a:text-jzo-gold prose-a:no-underline hover:prose-a:text-jzo-gold-dark',
+  'prose-blockquote:border-l-2 prose-blockquote:border-jzo-gold',
+  'prose-blockquote:font-serif prose-blockquote:not-italic prose-blockquote:text-slate-600',
+  'prose-img:w-full',
+].join(' ')
 
 export default function BlogPost() {
   const { slug } = useParams<{ slug: string }>()
@@ -24,7 +45,7 @@ export default function BlogPost() {
       <div className="relative h-[60vh] overflow-hidden">
         <img
           src={post.image}
-          alt={post.title}
+          alt={post.imageAlt}
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-slate-900/40" />
@@ -32,7 +53,7 @@ export default function BlogPost() {
           <div className="max-w-4xl mx-auto px-6 pb-12 w-full">
             <p className="text-jzo-gold text-xs font-medium tracking-[0.3em] uppercase mb-3">{post.tag}</p>
             <h1 className="font-serif text-4xl md:text-5xl text-white leading-tight max-w-2xl">{post.title}</h1>
-            <p className="text-white/60 text-sm mt-3">{post.date}</p>
+            <p className="text-white/60 text-sm mt-3">{formatPostDate(post.date)}</p>
           </div>
         </div>
       </div>
@@ -43,12 +64,8 @@ export default function BlogPost() {
           ← Back to home
         </Link>
 
-        <div className="space-y-6">
-          {post.body.map((paragraph, i) => (
-            <p key={i} className="text-slate-700 text-lg leading-relaxed">
-              {paragraph}
-            </p>
-          ))}
+        <div className={PROSE}>
+          <ReactMarkdown>{post.body}</ReactMarkdown>
         </div>
 
         {/* CTA */}

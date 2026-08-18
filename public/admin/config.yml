@@ -1,0 +1,146 @@
+# Decap CMS configuration for jzotravel.world
+#
+# Editors reach this at https://jzotravel.world/admin/. Vite copies public/
+# verbatim into dist/, so this rides the existing deploy — no separate bucket,
+# distribution, or workflow step.
+#
+# There is no user database. Whoever may edit this site is decided entirely by
+# the collaborator list on github.com/lenhofr/jzotravel; the OAuth broker hands
+# back a token reflecting what that GitHub user could already do.
+
+backend:
+  name: github
+  repo: lenhofr/jzotravel
+  branch: main
+  # Shared broker, deployed from lenhofr/cms-oauth. It performs the OAuth code
+  # exchange that cannot happen in the browser, and serves every site we own.
+  # https://jzotravel.world must appear in that stack's allowed_origins or the
+  # popup refuses to hand back the token.
+  base_url: https://cms-auth.lenhof.dev
+  auth_endpoint: auth
+
+# Opens a pull request on a cms/ branch instead of committing straight to main.
+# This IS the approval gate — GitHub's PR review is it, so there is no separate
+# approval UI to build. Removing this line lets an editor publish unreviewed.
+publish_mode: editorial_workflow
+
+# No `local_backend` line. It bypasses OAuth *and* the editorial workflow, so it
+# must never be committed — add it locally to test, then take it back out.
+
+logo_url: /logo.svg
+site_url: https://jzotravel.world
+display_url: https://jzotravel.world
+
+# media_folder is a repo path, public_folder is the URL that path is served at.
+# The app lives at the repo root here, so there is no frontend/ prefix.
+media_folder: "public/images/blog"
+public_folder: "/images/blog"
+
+collections:
+  - name: "blog"
+    label: "Blog posts"
+    label_singular: "Blog post"
+    description: >-
+      Posts appear on the home page and at /blog and /blog/<slug>. Saving here
+      opens a pull request for review; nothing reaches the live site until that
+      pull request is merged.
+    folder: "content/blog"
+    create: true
+    # Name the file from the slug field rather than from the title, so the
+    # filename and the URL cannot drift apart. generate-posts.mjs warns when
+    # they do.
+    slug: "{{fields.slug}}"
+    fields:
+      - label: "Title"
+        name: "title"
+        widget: "string"
+
+      - label: "Slug"
+        name: "slug"
+        widget: "string"
+        hint: >-
+          URL segment — lowercase letters, numbers and single hyphens. This
+          becomes /blog/<slug> and the filename. Changing it on a published post
+          breaks any existing link to that post.
+        pattern:
+          [
+            "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "Lowercase letters, numbers and single hyphens only",
+          ]
+
+      - label: "Date"
+        name: "date"
+        widget: "datetime"
+        format: "YYYY-MM-DD"
+        date_format: "YYYY-MM-DD"
+        time_format: false
+        # Without this, picking a date in a timezone behind UTC stores the
+        # previous day, which the site then renders as the wrong month.
+        picker_utc: true
+        hint: >-
+          Sorts the blog, newest first. Only the month and year are displayed,
+          as 'July 2026' — but the day still decides the order within a month.
+
+      - label: "Region"
+        name: "tag"
+        widget: "string"
+        # Free text rather than a fixed list: the set of destinations is open
+        # ended, and a select would make every new region a code change. The
+        # build guards the failure mode a list would have prevented — two
+        # spellings of one region — by rejecting case/whitespace near-duplicates.
+        hint: >-
+          Shown above the title, e.g. Michigan, Spain. Match the spelling used
+          by existing posts exactly — 'spain' and 'Spain' would show up as two
+          different regions, so the build rejects it.
+
+      - label: "Excerpt"
+        name: "excerpt"
+        widget: "text"
+        hint: "Teaser shown on the post's card. One or two sentences."
+
+      - label: "Article image"
+        name: "image"
+        widget: "image"
+        # Required, unlike some of our other sites: both the card and the post
+        # hero render this image unconditionally, with no placeholder to fall
+        # back to, so a post without one ships a broken image.
+        hint: >-
+          Shown on the post's card and full-bleed at the top of the post. Wide,
+          landscape photos work best — it is cropped to fill a short banner.
+
+      - label: "Image description"
+        name: "imageAlt"
+        widget: "string"
+        hint: >-
+          Read aloud by screen readers, and shown if the photo fails to load.
+          Describe what is actually in the shot — 'Sandstone cliffs above Lake
+          Superior', not 'photo' or the filename.
+
+      - label: "Closing pitch"
+        name: "cta"
+        widget: "string"
+        required: false
+        hint: >-
+          The line above the Start Planning button at the end of the post. Make
+          it specific to this trip. Leave empty for the generic fallback.
+
+      - label: "Hide from the site"
+        name: "draft"
+        widget: "boolean"
+        required: false
+        # Defaults to false because publication is already gated by the pull
+        # request. Defaulting to true means a merged post silently never appears
+        # until someone remembers to flip it — a failure mode with no error
+        # message anywhere.
+        default: false
+        hint: >-
+          Leave off. Turn on only to pull an already-published post from the
+          site while keeping the file.
+
+      - label: "Body"
+        name: "body"
+        widget: "markdown"
+        hint: >-
+          Headings, bold, links and bullet lists all render. Raw HTML does not —
+          it appears as literal text on the page, and HTML comments are stripped
+          at build time.
