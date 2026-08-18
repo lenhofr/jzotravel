@@ -4,7 +4,7 @@ slug: "patio-de-las-munecas-seville"
 date: 2026-06-02
 tag: "Spain"
 excerpt: "A hidden Mudéjar courtyard, a 19th-century glass sky, and tiny carved faces you have to know to find."
-image: "/images/IMG_6700.webp"
+image: "/images/blog/patio-de-las-munecas.webp"
 imageAlt: "Layered stucco arches of the Patio de las Muñecas beneath a pale blue glass skylight"
 cta: "Let us plan your Seville itinerary — every detail handled."
 draft: false

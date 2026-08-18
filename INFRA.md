@@ -8,7 +8,7 @@ Domain is driven by a Terraform variable so it can be swapped without touching r
 ## Architecture
 
 ```
-Browser → CloudFront (HTTPS, www→apex redirect)
+Browser → CloudFront (HTTPS, viewer-request function)
                ↓ OAC (sigv4)
           S3 bucket (private, versioned, AES-256)
 ```
@@ -16,8 +16,34 @@ Browser → CloudFront (HTTPS, www→apex redirect)
 CloudFront handles:
 - HTTPS termination (ACM cert, us-east-1)
 - SPA routing: 403/404 → `/index.html` (required for client-side routing)
-- `www → apex` redirect via CloudFront Function
+- `www → apex` redirect, `/admin` → `/admin/`, and directory-index rewrites,
+  all via a single CloudFront Function (see below)
 - Access logs → separate S3 log bucket (90-day lifecycle)
+
+### The viewer-request function (`aws_cloudfront_function.redirect_www`, `acm.tf`)
+
+CloudFront permits **exactly one viewer-request function per cache behavior**, so
+all request-time logic lives in this one function. New logic must be merged into
+it — adding a second `function_association` fails at apply time. In order:
+
+1. 301 `www.` → apex.
+2. 301 `/admin` → `/admin/`. Without this the URL falls through the 404 handler
+   to `index.html` and the SPA renders a blank page, since no route matches.
+3. Rewrite any URI ending in `/` to `<uri>index.html`.
+
+Step 3 is what makes the CMS at `/admin/` work at all. `default_root_object`
+applies **only to the distribution root**, so `/admin/` asks S3 for the key
+`admin/`, 404s, and `custom_error_response` serves `/index.html` at 200 — the
+travel site, not the CMS. URIs without a trailing slash are left alone so
+`/blog/<slug>` still falls through to the SPA.
+
+The function is on `cloudfront-js-1.0`, which does not reliably provide
+`String.prototype.endsWith` — use `uri.slice(-1) === '/'` instead.
+
+> Because of the 403/404 → 200 fallback, **every path returns HTTP 200**. A status
+> code proves nothing about routing; check the response body. `vite preview` will
+> not reproduce a `/admin/` failure either, since it serves directory indexes
+> natively — the deployed site is the only real test.
 
 Starts as a pure static site. When dynamic features are needed, add:
 - `backend_api.tf` — API Gateway + Lambda functions
@@ -176,6 +202,31 @@ bstri/terraform.tfstate
 jf-com/terraform.tfstate
 mbm-ui/terraform.tfstate
 ```
+
+---
+
+## Content management (Decap CMS)
+
+Editors use Decap CMS at `https://jzotravel.world/admin/`. It is a static bundle in
+`public/admin/`, so it rides the existing deploy — **no extra bucket, distribution
+or workflow step**, and nothing in this runbook changes because of it.
+
+Two external dependencies worth knowing about when debugging a broken login:
+
+- **The OAuth broker** is shared, deployed from `lenhofr/cms-oauth` at
+  `https://cms-auth.lenhof.dev`. It performs the OAuth code exchange that cannot
+  happen in a browser. `https://jzotravel.world` must appear in its
+  `allowed_origins` or the popup refuses to hand back a token. Read the live value
+  without AWS credentials — the broker inlines it into its callback page:
+  ```bash
+  curl -s https://cms-auth.lenhof.dev/callback | grep -o 'var allowed = .*;'
+  ```
+- **Access control is GitHub collaborators** on `lenhofr/jzotravel`, requiring
+  `Write` — `editorial_workflow` creates branches and opens pull requests. There
+  is no user database and nothing to provision in AWS.
+
+The CloudFront invalidation is `/*`, which already covers `/admin/*`. A narrower
+path list would serve a stale `config.yml` for the full TTL.
 
 ---
 

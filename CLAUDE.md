@@ -91,9 +91,8 @@ verbatim — so there is no extra bucket, distribution or workflow step.
 
 Through the CMS at `/admin/`, or by hand:
 
-1. Convert/resize the photo (see image workflow below). CMS uploads land in
-   `public/images/blog/` and are referenced as `/images/blog/<name>.webp`; the older
-   posts reference `/images/<name>.webp` and are left where they are.
+1. Convert/resize the photo (see image workflow below) into `public/images/blog/`,
+   referenced as `/images/blog/<name>.webp`. CMS uploads land there automatically.
 2. Add `content/blog/<slug>.md`. Filename must match the `slug` field — the generator
    warns when they diverge. Use today's date in ISO form and the article's closing
    pitch as `cta`.
@@ -123,13 +122,26 @@ img = ImageOps.exif_transpose(Image.open('/tmp/photo.jpg'))
 img.save('/tmp/photo.jpg', quality=95)"
 
 # 3. Resize + encode to webp (cwebp is installed via homebrew):
-cwebp -q 82 -resize 1920 0 /tmp/photo.jpg -o public/images/<name>.webp
+cwebp -q 82 -resize 1920 0 /tmp/photo.jpg -o public/images/blog/<name>.webp
 ```
 
 For a JPEG source, skip step 1 and run `cwebp` directly. `-resize <width> 0` preserves aspect ratio. Sanity-check the result visually and keep hero files ≲300KB. Source photos smaller than ~800px wide will look soft in the full-bleed hero — ask for the full-resolution original.
 
-Don't commit source HEIC/JPEG files; only the final `.webp` belongs in `public/images/`
-(or `public/images/blog/` for CMS uploads). Some untracked leftovers (e.g. `IMG_5810.webp`, source HEICs) may sit in `public/images/` — leave them alone and don't add them to commits.
+**Where images live, and why the split matters:**
+
+| Folder | Holds | Visible in the CMS Media pane |
+| --- | --- | --- |
+| `public/images/blog/` | blog post photos — this is Decap's `media_folder` | yes |
+| `public/images/` | site chrome (`waikiki-hero.webp` for `Hero.tsx`, `andes-llama.webp` for `About.tsx`) | no |
+
+Decap's media library shows exactly one folder, so anything outside `public/images/blog/`
+is invisible to editors. That is deliberate for the two chrome images: the media pane can
+*delete* files, and deleting either one breaks the home page.
+
+Don't commit source HEIC/JPEG files; only the final `.webp` belongs in the repo. `.HEIC`
+is gitignored, because everything in `public/` is copied verbatim into `dist/` and synced
+to S3 — a stray source photo would ship. Some untracked leftovers may still sit in
+`public/images/` — leave them alone and don't add them to commits.
 
 ## Logo assets
 
