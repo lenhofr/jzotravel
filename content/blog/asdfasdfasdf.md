@@ -13,15 +13,12 @@ draft: false
 ---
 this is just a test now that we have more rules in place
 
-
-
 1. i
 2. am
 3. in
 4. a
 5. list
-
-
+6. another item
 
 ```python
 #test code 
@@ -29,5 +26,4 @@ this is just a test now that we have more rules in place
 dict1 = {'a': 1, 'b': 2}
 dict2 = {'b': 3, 'c': 4}
 merged = dict1 | dict2  # {'a': 1, 'b': 3, 'c': 4}
-
 ```
