@@ -9,7 +9,7 @@ excerpt: |-
   adsfasd
 image: /images/blog/original.jpg
 imageAlt: asdfsd
-draft: false
+draft: true
 ---
 this is just a test now that we have more rules in place
 
